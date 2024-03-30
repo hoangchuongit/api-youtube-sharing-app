@@ -13,6 +13,7 @@ export function configSwagger(app: INestApplication) {
     .setTitle('Youtube Sharing App')
     .setDescription('## Youtube Sharing App API description')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   fs.writeFileSync('swagger.json', JSON.stringify(document));

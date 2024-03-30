@@ -10,6 +10,7 @@ import {
   ApiBadRequestResponse,
   ApiConflictResponse,
   ApiResponse,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
 import {
@@ -163,6 +164,7 @@ export class AuthController {
     summary: 'Refresh Access-token for User',
     description: `## Refresh Access-token`,
   })
+  @ApiBearerAuth()
   @ApiCreatedResponse({
     description: 'Re-created access-token successfully!',
     content: {
