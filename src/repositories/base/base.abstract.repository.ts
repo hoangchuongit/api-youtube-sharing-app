@@ -1,7 +1,7 @@
 import { BaseEntity } from '@modules/shared/base/base.entity';
 import { FilterQuery, Model, QueryOptions } from 'mongoose';
+import { FindAllResponse } from 'src/types/common.type';
 import { BaseRepositoryInterface } from './base.interface.repository';
-import { FindAllResponse } from 'src/types/comon.type';
 
 export abstract class BaseRepositoryAbstract<T extends BaseEntity>
   implements BaseRepositoryInterface<T>
@@ -12,11 +12,15 @@ export abstract class BaseRepositoryAbstract<T extends BaseEntity>
 
   async create(dto: T | any): Promise<T> {
     const createdData = await this.model.create(dto);
-    return createdData.save();
+    return createdData.save() as any;
   }
 
-  async findOneById(id: string): Promise<T> {
-    const item = await this.model.findById(id);
+  async findOneById(
+    id: string,
+    projection?: string,
+    options?: QueryOptions<T>,
+  ): Promise<T> {
+    const item = await this.model.findById(id, projection, options);
     return item.deletedAt ? null : item;
   }
 
@@ -34,7 +38,7 @@ export abstract class BaseRepositoryAbstract<T extends BaseEntity>
     options?: QueryOptions<T>,
   ): Promise<FindAllResponse<T>> {
     const [count, items] = await Promise.all([
-      this.model.count({ ...condition, deletedAt: null }),
+      this.model.countDocuments({ ...condition, deletedAt: null }),
       this.model.find(
         { ...condition, deletedAt: null },
         options?.projection,
@@ -49,15 +53,15 @@ export abstract class BaseRepositoryAbstract<T extends BaseEntity>
 
   async update(id: string, dto: Partial<T>): Promise<T> {
     return await this.model.findOneAndUpdate(
-      { _id: id, deletedAt: null },
+      { _id: id as any, deletedAt: null },
       dto,
       { new: true },
     );
   }
 
   async softDelete(id: string): Promise<boolean> {
-    const deleteItem = await this.model.findById(id);
-    if (!deleteItem) {
+    const delete_item = await this.model.findById(id);
+    if (!delete_item) {
       return false;
     }
 
@@ -67,10 +71,10 @@ export abstract class BaseRepositoryAbstract<T extends BaseEntity>
   }
 
   async permanentlyDelete(id: string): Promise<boolean> {
-    const deleteItem = await this.model.findById(id);
-    if (!deleteItem) {
+    const delete_item = await this.model.findById(id);
+    if (!delete_item) {
       return false;
     }
-    return !!(await this.model.findByIdAndDelete(id));
+    return !!(await this.model.findOneAndDelete({ _id: id as any }));
   }
 }

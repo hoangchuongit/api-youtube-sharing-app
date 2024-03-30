@@ -1,40 +1,27 @@
 import { BaseEntity } from '@modules/shared/base/base.entity';
 import { User } from '@modules/users/entities/user.entity';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument } from 'mongoose';
+import * as mongoose from 'mongoose';
 
-export type PostDocument = HydratedDocument<Post>;
-
+export type PostDocument = mongoose.HydratedDocument<Post>;
 @Schema({
-  timestamps: {
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-  },
+  collection: 'posts',
 })
 export class Post extends BaseEntity {
-  @Prop({
-    required: true,
-    minlength: 2,
-    maxlength: 120,
-    set: (title: string) => {
-      return title.trim();
-    },
-  })
+  @Prop({ required: true })
   title: string;
 
-  @Prop({
-    required: true,
-    set: (link: string) => {
-      return link.trim();
-    },
-  })
+  @Prop({ required: true })
   link: string;
 
-  description: string;
+  @Prop()
+  description?: string;
 
+  @Prop({ default: [], type: [String] })
   like: string[];
 
-  unLike: string[];
+  @Prop({ default: [], type: [String] })
+  unlike: string[];
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
   user: User;

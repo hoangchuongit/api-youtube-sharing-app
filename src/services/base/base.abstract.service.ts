@@ -1,7 +1,7 @@
 import { BaseEntity } from '@modules/shared/base/base.entity';
 import { BaseRepositoryInterface } from '@repositories/base/base.interface.repository';
+import { FindAllResponse } from 'src/types/common.type';
 import { BaseServiceInterface } from './base.interface.service';
-import { FindAllResponse } from 'src/types/comon.type';
 
 export abstract class BaseServiceAbstract<T extends BaseEntity>
   implements BaseServiceInterface<T>
@@ -20,6 +20,10 @@ export abstract class BaseServiceAbstract<T extends BaseEntity>
   }
   async findOne(id: string) {
     return await this.repository.findOneById(id);
+  }
+
+  async findOneByCondition(filter: Partial<T>) {
+    return await this.repository.findOneByCondition(filter);
   }
 
   async update(id: string, update_dto: Partial<T>) {

@@ -4,8 +4,7 @@ import {
   IsStrongPassword,
   MaxLength,
 } from 'class-validator';
-
-export class CreateUserDto {
+export class RegisterDto {
   @IsNotEmpty()
   @MaxLength(50)
   firstName: string;

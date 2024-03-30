@@ -1,6 +1,9 @@
 import { BaseEntity } from '@modules/shared/base/base.entity';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Model } from 'mongoose';
+import { Exclude, Expose } from 'class-transformer';
+import { NextFunction } from 'express';
+import { PostDocument } from '@modules/posts/entities/post.entity';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -9,8 +12,15 @@ export type UserDocument = HydratedDocument<User>;
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
   },
+  toJSON: {
+    getters: true,
+    virtuals: true,
+  },
 })
 export class User extends BaseEntity {
+  @Prop()
+  friendlyId: number;
+
   @Prop({
     required: true,
     minlength: 2,
@@ -23,6 +33,8 @@ export class User extends BaseEntity {
 
   @Prop({
     required: true,
+    minlength: 2,
+    maxlength: 60,
     set: (lastName: string) => {
       return lastName.trim();
     },
@@ -33,17 +45,41 @@ export class User extends BaseEntity {
     required: true,
     unique: true,
     match: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
-    set: (email: string) => {
-      return email.trim();
-    },
   })
   email: string;
 
+  @Exclude()
   @Prop({
     required: true,
-    select: false,
   })
   password: string;
+
+  @Prop()
+  @Exclude()
+  current_refresh_token: string;
+
+  @Expose({ name: 'full_name' })
+  get fullName(): string {
+    return `${this.firstName} ${this.lastName}`;
+  }
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+export const UserSchemaFactory = (postModel: Model<PostDocument>) => {
+  const userSchema = UserSchema;
+
+  userSchema.pre('findOneAndDelete', async function (next: NextFunction) {
+    const user = await this.model.findOne(this.getFilter());
+    await Promise.all([
+      postModel
+        .deleteMany({
+          user: user._id,
+        })
+        .exec(),
+    ]);
+    return next();
+  });
+
+  return userSchema;
+};

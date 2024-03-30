@@ -5,8 +5,9 @@ import * as Joi from 'joi';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { databaseConfig } from '@configs/configuration.config';
-import { UsersModule } from './modules/users/users.module';
-import { PostsModule } from './modules/posts/posts.module';
+import { UsersModule } from '@modules/users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { PostsModule } from '@modules/posts/posts.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -40,6 +41,7 @@ import { PostsModule } from './modules/posts/posts.module';
     }),
     UsersModule,
     PostsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

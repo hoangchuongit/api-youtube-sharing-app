@@ -2,13 +2,12 @@ import { Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { MongooseModule, getModelToken } from '@nestjs/mongoose';
-import { User, UserSchema } from './entities/user.entity';
-import { UserSchemaFactory } from './entities/user-factory.entity';
+import { User, UserSchemaFactory } from './entities/user.entity';
+import { UsersRepository } from '@repositories/users.repository';
 import { Post, PostSchema } from '@modules/posts/entities/post.entity';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     MongooseModule.forFeatureAsync([
       {
         name: User.name,
@@ -21,6 +20,10 @@ import { Post, PostSchema } from '@modules/posts/entities/post.entity';
     ]),
   ],
   controllers: [UsersController],
-  providers: [UsersService],
+  providers: [
+    UsersService,
+    { provide: 'UsersRepositoryInterface', useClass: UsersRepository },
+  ],
+  exports: [UsersService],
 })
 export class UsersModule {}
