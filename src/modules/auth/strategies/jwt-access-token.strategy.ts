@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { access_token_public_key } from 'src/constraints/jwt.constraint';
+import { ITokenPayload } from '../interfaces/token.interface';
 
 @Injectable()
 export class JwtAccessTokenStrategy extends PassportStrategy(Strategy) {
@@ -12,5 +13,9 @@ export class JwtAccessTokenStrategy extends PassportStrategy(Strategy) {
       ignoreExpiration: true,
       secretOrKey: access_token_public_key,
     });
+  }
+
+  async validate(payload: ITokenPayload) {
+    return await this.users_service.getUserWithRole(payload.user_id);
   }
 }

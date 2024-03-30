@@ -159,12 +159,12 @@ export class AuthController {
    * Refresh token API
    */
   @UseGuards(JwtRefreshTokenGuard)
+  @ApiBearerAuth()
   @Post('refresh')
   @ApiOperation({
     summary: 'Refresh Access-token for User',
     description: `## Refresh Access-token`,
   })
-  @ApiBearerAuth()
   @ApiCreatedResponse({
     description: 'Re-created access-token successfully!',
     content: {

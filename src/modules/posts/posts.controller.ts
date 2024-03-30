@@ -3,32 +3,69 @@ import {
   Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete,
   UseGuards,
   ParseIntPipe,
   Query,
+  Req,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
 import { JwtAccessTokenGuard } from '@modules/auth/guards/jwt-access-token.guard';
-import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
+import { IPostShareYoutubeInput } from './interfaces/posts.interface';
+import {
+  postShareYoutubeInputMock,
+  postShareYoutubeResponseMock,
+} from './__mocks__/post.mock';
+import { object } from 'joi';
+import { RequestWithUser } from 'src/types/requests.type';
 
 @Controller('posts')
 @ApiTags('Posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  @Post()
-  @ApiOperation({
-    summary: 'User share new post',
-    description: '# User share new post',
-  })
   @UseGuards(JwtAccessTokenGuard)
-  create(@Body() create_post_dto: CreatePostDto) {
-    return this.postsService.create(create_post_dto);
+  @ApiBearerAuth()
+  @Post('share-youtube')
+  @ApiOperation({
+    summary: 'User share new video',
+    description: '# User share new video',
+  })
+  @ApiBody({
+    type: object,
+    examples: {
+      example: {
+        value: postShareYoutubeInputMock,
+      },
+    },
+  })
+  @ApiCreatedResponse({
+    description: 'User share youtube link successfully!',
+    content: {
+      'application/json': {
+        examples: {
+          created_user: {
+            summary: 'Response after share youtube link',
+            value: postShareYoutubeResponseMock,
+          },
+        },
+      },
+    },
+  })
+  async shareYoutube(
+    @Req() request: RequestWithUser,
+    @Body() body: IPostShareYoutubeInput,
+  ) {
+    const { user } = request;
+    const { link } = body;
+    return this.postsService.shareYoutube(user, link);
   }
 
   @Get()
@@ -70,31 +107,4 @@ export class PostsController {
   ) {
     return this.postsService.findAll({ offset, limit });
   }
-
-  // @Get(':id')
-  // @ApiOperation({
-  //   summary: 'Get post by ID',
-  //   description: '# Get post by ID',
-  // })
-  // findOne(@Param('id') id: string) {
-  //   return this.postsService.findOne(id);
-  // }
-
-  // @Patch(':id')
-  // @ApiOperation({
-  //   summary: 'Update post details',
-  //   description: '# Update post details',
-  // })
-  // update(@Param('id') id: string, @Body() update_post_dto: UpdatePostDto) {
-  //   return this.postsService.update(id, update_post_dto);
-  // }
-
-  // @Delete(':id')
-  // @ApiOperation({
-  //   summary: 'Delete post',
-  //   description: '# Delete posts',
-  // })
-  // remove(@Param('id') id: string) {
-  //   return this.postsService.remove(id);
-  // }
 }
