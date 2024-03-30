@@ -12,15 +12,9 @@
     "baseUrl": "./",
     "incremental": true,
     "paths": {
-      "@modules/*": [
-        "src/modules/*"
-      ],
-      "@configs/*": [
-        "src/configs/*"
-      ],
-      "@repositories/*": [
-        "src/repositories/*"
-      ]
+      "@modules/*": ["src/modules/*"],
+      "@configs/*": ["src/configs/*"],
+      "@repositories/*": ["src/repositories/*"]
     },
     "skipLibCheck": true,
     "strictNullChecks": false,
