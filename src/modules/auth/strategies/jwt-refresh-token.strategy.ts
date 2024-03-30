@@ -4,8 +4,8 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import { AuthService } from '../auth.service';
-import { TokenPayload } from '../interfaces/token.interface';
 import { refresh_token_public_key } from 'src/constraints/jwt.constraint';
+import { ITokenPayload } from '../interfaces/token.interface';
 
 @Injectable()
 export class JwtRefreshTokenStrategy extends PassportStrategy(
@@ -21,7 +21,7 @@ export class JwtRefreshTokenStrategy extends PassportStrategy(
     });
   }
 
-  async validate(request: Request, payload: TokenPayload) {
+  async validate(request: Request, payload: ITokenPayload) {
     return await this.auth_service.getUserIfRefreshTokenMatched(
       payload.user_id,
       request.headers.authorization.split('Bearer ')[1],

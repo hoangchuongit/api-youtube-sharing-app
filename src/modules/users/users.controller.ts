@@ -24,56 +24,56 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  @ApiOperation({
-    summary: 'Admin create new user',
-    description: `
-* Only admin can use this API
+  //   @Post()
+  //   @ApiOperation({
+  //     summary: 'Admin create new user',
+  //     description: `
+  // * Only admin can use this API
 
-* Admin create user and give some specific information`,
-  })
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
-  }
+  // * Admin create user and give some specific information`,
+  //   })
+  //   create(@Body() createUserDto: CreateUserDto) {
+  //     return this.usersService.create(createUserDto);
+  //   }
 
-  @SerializeOptions({
-    excludePrefixes: ['first', 'last'],
-  })
-  @Get()
-  @ApiOperation({
-    summary: 'Admin find user list',
-    description: '# Admin find user list',
-  })
-  @UseGuards(JwtAccessTokenGuard)
-  findAll() {
-    return this.usersService.findAll();
-  }
+  //   @SerializeOptions({
+  //     excludePrefixes: ['first', 'last'],
+  //   })
+  //   @Get()
+  //   @ApiOperation({
+  //     summary: 'Admin find user list',
+  //     description: '# Admin find user list',
+  //   })
+  //   @UseGuards(JwtAccessTokenGuard)
+  //   findAll() {
+  //     return this.usersService.findAll();
+  //   }
 
-  @Get(':id')
-  @ApiOperation({
-    summary: 'Admin find user by ID',
-    description: '# Admin find user ID',
-  })
-  async findOne(@Param('id') id: string) {
-    return await this.usersService.findOne(id);
-  }
+  //   @Get(':id')
+  //   @ApiOperation({
+  //     summary: 'Admin find user by ID',
+  //     description: '# Admin find user ID',
+  //   })
+  //   async findOne(@Param('id') id: string) {
+  //     return await this.usersService.findOne(id);
+  //   }
 
-  @Patch(':id')
-  @ApiOperation({
-    summary: 'Admin update user details',
-    description: '# Admin update user details',
-  })
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(id, updateUserDto);
-  }
+  //   @Patch(':id')
+  //   @ApiOperation({
+  //     summary: 'Admin update user details',
+  //     description: '# Admin update user details',
+  //   })
+  //   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  //     return this.usersService.update(id, updateUserDto);
+  //   }
 
-  @Delete(':id')
-  @ApiOperation({
-    summary: 'Admin delete user details',
-    description: '# Admin delete user details',
-  })
-  @UseGuards(JwtAccessTokenGuard)
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(id);
-  }
+  //   @Delete(':id')
+  //   @ApiOperation({
+  //     summary: 'Admin delete user details',
+  //     description: '# Admin delete user details',
+  //   })
+  //   @UseGuards(JwtAccessTokenGuard)
+  //   remove(@Param('id') id: string) {
+  //     return this.usersService.remove(id);
+  //   }
 }

@@ -1,8 +1,6 @@
 import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LocalAuthGuard } from './guards/local.guard';
 import { RequestWithUser } from 'src/types/requests.type';
-import { JwtRefreshTokenGuard } from './guards/jwt-refresh-token.guard';
 import { RegisterDto } from './dto/register.dto';
 import {
   ApiTags,
@@ -14,6 +12,14 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
+import {
+  authRefreshResponseMock,
+  authResponseMock,
+  loginDtoMock,
+  registerDtoMock,
+} from './__mocks__/auth.mock';
+import { LocalAuthGuard } from './guards/local.guard';
+import { JwtRefreshTokenGuard } from './guards/jwt-refresh-token.guard';
 
 @Controller('auth')
 @ApiTags('Authorize')
@@ -25,19 +31,14 @@ export class AuthController {
    */
   @Post('register')
   @ApiOperation({
-    summary: 'User register to platform',
+    summary: 'User register to Youtube Sharing App',
     description: `## User register`,
   })
   @ApiBody({
     type: RegisterDto,
     examples: {
-      user_1: {
-        value: {
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'johndoe@example.com',
-          password: '1232@asdS',
-        } as RegisterDto,
+      example: {
+        value: registerDtoMock,
       },
     },
   })
@@ -48,12 +49,7 @@ export class AuthController {
         examples: {
           created_user: {
             summary: 'Response after register',
-            value: {
-              access_token:
-                'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjQ0MWNkNmJlMWQ0ZTBiNDRjNzA3NDk2IiwiaWF0IjoxNjgyMDM0MDI3LCJleHAiOjE2ODIwMzc2Mjd9.AH4z7uDWuEDjOs8sesB0ItxKUJ2M3rjul1D1mmjAKieOZblej5mp0JQE5IdgB9LlAOzOtKOLL5RWhxLCZ-YskvoRA7Yqza_rOjfIHeNseC3M66kKYqORN07aZDiA2OWhT3pXBqoKRCUBQCKLgMCAPT-CHryc0wUQGaKxP8YJO8dwIhGtjADchmzNJVBs4G7qYnpZAsORayd5GNfgoLpWmVFIBHSnPLNIL4dL8dLof0GBmVhdjhnHIUXYQlqL1wiwsmxmUC9TU2uiChm-TAhuiQyVwFokSySBJzBrLmEtgy89aaR0YizFK-QMg2xW3cJiiRzEBigTdsR0kvdUlk5GOg',
-              refresh_token:
-                'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjQ0MWNkNmJlMWQ0ZTBiNDRjNzA3NDk2IiwiaWF0IjoxNjgyMDM0MDI3LCJleHAiOjE2ODIwNTkyMjd9.aKNZymKdf3VEbPkda2cYYTS7KlpCbTqdXP30LREQ2b_fJ8q8cA0OyNEARK3Jm5yGsKoNd3txi54XmEbf19LC9CuDf9kwgLasPizEeMZsAJqSbSguzE4-9b4sSdf22GyipCcZJpkXkp01Bew04J8Y4FqhNARONsWzySXg8_VVWOGkfHGJVHFs7xYyVvmt3RErJwRM5s1Ou1ok7VW62FSTSAvXw6-qsHp5T7kXo73jECBqSuNEs5JcdluoBjdaAxggHYaDgTXoRh7y4Mn_fVKCQarAsUAxg6w0fxc8Gj0nP1ct3-GjG-Of-0O-iF7uynI2Lnq_On7WUsH7rFSysNyHUg',
-            },
+            value: authResponseMock,
           },
         },
       },
@@ -68,7 +64,7 @@ export class AuthController {
             value: {
               statusCode: 400,
               message: [
-                'Email must be an email',
+                'Invalid email address',
                 'Password is not strong enough',
               ],
               error: 'Bad Request',
@@ -78,6 +74,8 @@ export class AuthController {
             value: {
               statusCode: 400,
               message: [
+                'firstName must be shorter than or equal to 50 characters',
+                'firstName should not be empty',
                 'lastName must be shorter than or equal to 50 characters',
                 'lastName should not be empty',
               ],
@@ -96,7 +94,7 @@ export class AuthController {
           email_duplication: {
             value: {
               statusCode: 409,
-              message: 'Email already existed!!',
+              message: 'Email is already in use. Please try another email',
               error: 'Conflict',
             },
           },
@@ -114,17 +112,14 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   @ApiOperation({
-    summary: 'User login to platform',
+    summary: 'User login to Youtube Sharing App',
     description: `## User login`,
   })
   @ApiBody({
     type: LoginDto,
     examples: {
-      user_1: {
-        value: {
-          email: 'johndoe@example.com',
-          password: '1232@asdS',
-        } as LoginDto,
+      example: {
+        value: loginDtoMock,
       },
     },
   })
@@ -135,15 +130,28 @@ export class AuthController {
       'application/json': {
         example: {
           statusCode: 400,
-          message: 'Wrong credentials!!',
+          message: 'Wrong credentials!',
           error: 'Bad Request',
+        },
+      },
+    },
+  })
+  @ApiCreatedResponse({
+    description: 'Login successfully!',
+    content: {
+      'application/json': {
+        examples: {
+          logined_user: {
+            summary: 'Response after login',
+            value: authResponseMock,
+          },
         },
       },
     },
   })
   async login(@Req() request: RequestWithUser) {
     const { user } = request;
-    return await this.authService.login(user._id.toString());
+    return await this.authService.login(user);
   }
 
   /**
@@ -152,8 +160,21 @@ export class AuthController {
   @UseGuards(JwtRefreshTokenGuard)
   @Post('refresh')
   @ApiOperation({
-    summary: 'Refresh Access-token for user',
+    summary: 'Refresh Access-token for User',
     description: `## Refresh Access-token`,
+  })
+  @ApiCreatedResponse({
+    description: 'Re-created access-token successfully!',
+    content: {
+      'application/json': {
+        examples: {
+          refresh_token: {
+            summary: 'Response after Refresh Access-token',
+            value: authRefreshResponseMock,
+          },
+        },
+      },
+    },
   })
   async refreshAccessToken(@Req() request: RequestWithUser) {
     const { user } = request;

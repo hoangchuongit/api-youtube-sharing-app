@@ -18,9 +18,6 @@ export type UserDocument = HydratedDocument<User>;
   },
 })
 export class User extends BaseEntity {
-  @Prop()
-  friendlyId: number;
-
   @Prop({
     required: true,
     minlength: 2,
@@ -44,7 +41,9 @@ export class User extends BaseEntity {
   @Prop({
     required: true,
     unique: true,
-    match: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+    sparse: true,
+    trim: true,
+    set: (v) => v?.toLowerCase(),
   })
   email: string;
 
@@ -56,7 +55,7 @@ export class User extends BaseEntity {
 
   @Prop()
   @Exclude()
-  current_refresh_token: string;
+  currentRefreshToken: string;
 
   @Expose({ name: 'full_name' })
   get fullName(): string {

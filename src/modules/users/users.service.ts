@@ -39,7 +39,7 @@ export class UsersService extends BaseServiceAbstract<User> {
   ): Promise<void> {
     try {
       await this.usersRepository.update(id, {
-        current_refresh_token: hashed_token,
+        currentRefreshToken: hashed_token,
       });
     } catch (error) {
       throw error;

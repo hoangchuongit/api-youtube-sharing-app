@@ -71,30 +71,30 @@ export class PostsController {
     return this.postsService.findAll({ offset, limit });
   }
 
-  @Get(':id')
-  @ApiOperation({
-    summary: 'Get post by ID',
-    description: '# Get post by ID',
-  })
-  findOne(@Param('id') id: string) {
-    return this.postsService.findOne(id);
-  }
+  // @Get(':id')
+  // @ApiOperation({
+  //   summary: 'Get post by ID',
+  //   description: '# Get post by ID',
+  // })
+  // findOne(@Param('id') id: string) {
+  //   return this.postsService.findOne(id);
+  // }
 
-  @Patch(':id')
-  @ApiOperation({
-    summary: 'Update post details',
-    description: '# Update post details',
-  })
-  update(@Param('id') id: string, @Body() update_post_dto: UpdatePostDto) {
-    return this.postsService.update(id, update_post_dto);
-  }
+  // @Patch(':id')
+  // @ApiOperation({
+  //   summary: 'Update post details',
+  //   description: '# Update post details',
+  // })
+  // update(@Param('id') id: string, @Body() update_post_dto: UpdatePostDto) {
+  //   return this.postsService.update(id, update_post_dto);
+  // }
 
-  @Delete(':id')
-  @ApiOperation({
-    summary: 'Delete post',
-    description: '# Delete posts',
-  })
-  remove(@Param('id') id: string) {
-    return this.postsService.remove(id);
-  }
+  // @Delete(':id')
+  // @ApiOperation({
+  //   summary: 'Delete post',
+  //   description: '# Delete posts',
+  // })
+  // remove(@Param('id') id: string) {
+  //   return this.postsService.remove(id);
+  // }
 }

@@ -2,7 +2,6 @@ import { UsersService } from '@modules/users/users.service';
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { TokenPayload } from '../interfaces/token.interface';
 import { access_token_public_key } from 'src/constraints/jwt.constraint';
 
 @Injectable()

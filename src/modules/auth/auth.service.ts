@@ -7,7 +7,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { TokenPayload } from './interfaces/token.interface';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcryptjs';
 import {
@@ -15,60 +14,89 @@ import {
   refresh_token_private_key,
 } from 'src/constraints/jwt.constraint';
 import { RegisterDto } from './dto/register.dto';
+import { IAuthResponse } from './interfaces/auth.interface';
+import { ITokenPayload } from './interfaces/token.interface';
 
 @Injectable()
 export class AuthService {
   private SALT_ROUND = 11;
   constructor(
-    private config_service: ConfigService,
+    private configService: ConfigService,
     private readonly users_service: UsersService,
     private readonly jwt_service: JwtService,
   ) {}
 
-  async register(registerDto: RegisterDto) {
+  async register(registerDto: RegisterDto): Promise<IAuthResponse> {
     try {
       const existed_user = await this.users_service.findOneByCondition({
         email: registerDto.email,
       });
+
       if (existed_user) {
-        throw new ConflictException('Email already existed!!');
+        throw new ConflictException(
+          'Email is already in use. Please try another email',
+        );
       }
+
       const hashed_password = await bcrypt.hash(
         registerDto.password,
         this.SALT_ROUND,
       );
+
       const user = await this.users_service.create({
         ...registerDto,
         password: hashed_password,
       });
+
       const refresh_token = this.generateRefreshToken({
         user_id: user._id.toString(),
       });
+
       await this.storeRefreshToken(user._id.toString(), refresh_token);
-      return {
+
+      const response: IAuthResponse = {
         access_token: this.generateAccessToken({
           user_id: user._id.toString(),
         }),
         refresh_token,
+        user: {
+          id: user.id,
+          fullName: user.fullName,
+          email: user.email,
+        },
       };
+
+      return response;
     } catch (error) {
       throw error;
     }
   }
 
-  async login(user_id: string) {
+  async login(user: User): Promise<IAuthResponse> {
     try {
+      const user_id = user.id;
+
       const access_token = this.generateAccessToken({
         user_id,
       });
+
       const refresh_token = this.generateRefreshToken({
         user_id,
       });
+
       await this.storeRefreshToken(user_id, refresh_token);
-      return {
+
+      const response: IAuthResponse = {
         access_token,
         refresh_token,
+        user: {
+          id: user.id,
+          fullName: user.fullName,
+          email: user.email,
+        },
       };
+
+      return response;
     } catch (error) {
       throw error;
     }
@@ -107,7 +135,7 @@ export class AuthService {
       }
       await this.verifyPlainContentWithHashedContent(
         refresh_token,
-        user.current_refresh_token,
+        user.currentRefreshToken,
       );
       return user;
     } catch (error) {
@@ -115,21 +143,21 @@ export class AuthService {
     }
   }
 
-  generateAccessToken(payload: TokenPayload) {
+  generateAccessToken(payload: ITokenPayload) {
     return this.jwt_service.sign(payload, {
       algorithm: 'RS256',
       privateKey: access_token_private_key,
-      expiresIn: `${this.config_service.get<string>(
+      expiresIn: `${this.configService.get<string>(
         'JWT_ACCESS_TOKEN_EXPIRATION_TIME',
       )}s`,
     });
   }
 
-  generateRefreshToken(payload: TokenPayload) {
+  generateRefreshToken(payload: ITokenPayload) {
     return this.jwt_service.sign(payload, {
       algorithm: 'RS256',
       privateKey: refresh_token_private_key,
-      expiresIn: `${this.config_service.get<string>(
+      expiresIn: `${this.configService.get<string>(
         'JWT_REFRESH_TOKEN_EXPIRATION_TIME',
       )}s`,
     });
