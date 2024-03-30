@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  api_youtube_sharing_app_dev:
+    container_name: api_youtube_sharing_app_dev
+    image: api_youtube_sharing_app_dev:1.0.0
+    build:
+      context: .
+      target: development
+    command: npm run start:dev
+    ports:
+      - ${PORT}:${PORT}
+    volumes:
+      - ./:/usr/src/app
+    restart: unless-stopped
+
+networks:
+  default:
+    driver: bridge
