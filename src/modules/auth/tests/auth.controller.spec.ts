@@ -51,7 +51,7 @@ describe('AuthController', () => {
     });
   });
 
-  describe('signIn', () => {
+  describe('login', () => {
     it('should be protected with LocalAuthGuard', () => {
       expect(isGuarded(AuthController.prototype.login, LocalAuthGuard));
     });

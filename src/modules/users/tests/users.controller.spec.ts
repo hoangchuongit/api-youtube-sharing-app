@@ -1,9 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UsersController } from './users.controller';
-import { UsersService } from './users.service';
+import { UsersService } from '../users.service';
+import { UsersController } from '../users.controller';
+
+jest.mock('../users.service');
 
 describe('UsersController', () => {
-  let controller: UsersController;
+  let users_controller: UsersController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -11,10 +13,10 @@ describe('UsersController', () => {
       providers: [UsersService],
     }).compile();
 
-    controller = module.get<UsersController>(UsersController);
+    users_controller = module.get<UsersController>(UsersController);
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(users_controller).toBeDefined();
   });
 });

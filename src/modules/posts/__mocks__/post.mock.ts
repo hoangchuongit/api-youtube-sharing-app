@@ -6,6 +6,7 @@ import {
   IPostShareYoutubeResponse,
   IPostUserItemResponse,
 } from '../interfaces/posts.interface';
+import { CreatePostDto } from '../dto/create-post.dto';
 
 export const postShareYoutubeInputMock: IPostShareYoutubeInput = {
   link: 'https://www.youtube.com/watch?v=Bn75IkUyhMo',
@@ -35,4 +36,14 @@ export const postItemResponseMock: IPostItemResponse = {
 export const postListResponseMock: IPostListResponse = {
   total: 1,
   items: [postItemResponseMock],
+};
+
+export const creatPostDtoMock: CreatePostDto = {
+  title: postShareYoutubeResponseMock.title,
+  link: postShareYoutubeResponseMock.link,
+  description: postShareYoutubeResponseMock.link,
+  user: {
+    ...userDetailMock,
+    fullName: userDetailMock.fullName,
+  },
 };
