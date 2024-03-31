@@ -57,11 +57,14 @@ export class PostsService extends BaseServiceAbstract<Post> {
     }
   }
 
-  async getAll(page: number, perPage: number): Promise<IPostListResponse> {
-    const { count, items } = await this.postsRepository.findAll(
+  async getAll(
+    page: number = 1,
+    perPage: number = 10,
+  ): Promise<IPostListResponse> {
+    const { total, items } = await this.postsRepository.findAll(
       {
-        page,
-        perPage,
+        skip: (page - 1) * perPage,
+        limit: perPage,
       },
       { populate: 'user' },
     );
@@ -84,6 +87,6 @@ export class PostsService extends BaseServiceAbstract<Post> {
       formatedItems.push(formatedItem);
     });
 
-    return { count, items: formatedItems };
+    return { total, items: formatedItems };
   }
 }

@@ -4,8 +4,17 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 
 export type PostDocument = mongoose.HydratedDocument<Post>;
+
 @Schema({
   collection: 'posts',
+  timestamps: {
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+  },
+  toJSON: {
+    getters: true,
+    virtuals: true,
+  },
 })
 export class Post extends BaseEntity {
   @Prop({ required: true })

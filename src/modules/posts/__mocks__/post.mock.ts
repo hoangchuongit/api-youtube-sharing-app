@@ -1,4 +1,4 @@
-import { userDetailMock } from '@modules/users/__mock__/user.mock';
+import { userDetailMock } from '@modules/users/__mocks__/user.mock';
 import {
   IPostItemResponse,
   IPostListResponse,
@@ -33,6 +33,6 @@ export const postItemResponseMock: IPostItemResponse = {
 };
 
 export const postListResponseMock: IPostListResponse = {
-  count: 1,
+  total: 1,
   items: [postItemResponseMock],
 };

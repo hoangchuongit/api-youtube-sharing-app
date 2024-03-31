@@ -30,6 +30,6 @@ export interface IPostItemResponse {
 }
 
 export interface IPostListResponse {
-  count: number;
+  total: number;
   items: IPostItemResponse[];
 }

@@ -1,4 +1,4 @@
-import { userDetailMock } from '@modules/users/__mock__/user.mock';
+import { userDetailMock } from '@modules/users/__mocks__/user.mock';
 import { LoginDto } from '../dto/login.dto';
 import { RegisterDto } from '../dto/register.dto';
 import {

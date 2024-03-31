@@ -3,7 +3,7 @@ export enum SORT_TYPE {
   'ASC' = 'acs',
 }
 
-export type FindAllResponse<T> = { count: number; items: T[] };
+export type FindAllResponse<T> = { total: number; items: T[] };
 
 export type SortParams = { sort_by: string; sort_type: SORT_TYPE };
 
