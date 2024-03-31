@@ -2,6 +2,8 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { BaseServiceAbstract } from 'src/services/base/base.abstract.service';
 import { Post } from './entities/post.entity';
 import {
+  IPostItemResponse,
+  IPostListResponse,
   IPostShareYoutubeResponse,
   PostsRepositoryInterface,
 } from './interfaces/posts.interface';
@@ -48,5 +50,35 @@ export class PostsService extends BaseServiceAbstract<Post> {
     } catch (error) {
       throw new BadRequestException('This video is inactive or unlisted');
     }
+  }
+
+  async getAll(page: number, perPage: number): Promise<IPostListResponse> {
+    const { count, items } = await this.postsRepository.findAll(
+      {
+        page,
+        perPage,
+      },
+      { populate: 'user' },
+    );
+
+    const formatedItems = [];
+
+    items?.forEach((item) => {
+      const formatedItem: IPostItemResponse = {
+        id: item.id,
+        title: item.title,
+        link: item.link,
+        description: item.description,
+        like: item.like,
+        unlike: item.unlike,
+        user: {
+          id: item.user.id,
+          fullName: `${item.user.firstName} ${item.user.lastName}`,
+        },
+      };
+      formatedItems.push(formatedItem);
+    });
+
+    return { count, items: formatedItems };
   }
 }

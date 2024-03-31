@@ -37,14 +37,23 @@ export abstract class BaseRepositoryAbstract<T extends BaseEntity>
     condition: FilterQuery<T>,
     options?: QueryOptions<T>,
   ): Promise<FindAllResponse<T>> {
-    const [count, items] = await Promise.all([
-      this.model.countDocuments({ ...condition, deletedAt: null }),
-      this.model.find(
-        { ...condition, deletedAt: null },
-        options?.projection,
-        options,
-      ),
-    ]);
+    const count = await this.model.countDocuments();
+    let items: T[] = [];
+
+    if (options?.populate) {
+      items = await this.model
+        .find()
+        .skip(condition.page)
+        .limit(condition.perPage)
+        .populate(options?.populate as string)
+        .exec();
+    } else {
+      items = await this.model
+        .find()
+        .skip(condition.page)
+        .limit(condition.perPage);
+    }
+
     return {
       count,
       items,

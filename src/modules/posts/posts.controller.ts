@@ -20,6 +20,7 @@ import {
 } from '@nestjs/swagger';
 import { IPostShareYoutubeInput } from './interfaces/posts.interface';
 import {
+  postListResponseMock,
   postShareYoutubeInputMock,
   postShareYoutubeResponseMock,
 } from './__mocks__/post.mock';
@@ -70,41 +71,54 @@ export class PostsController {
 
   @Get()
   @ApiOperation({
-    summary: 'Get all posts',
-    description: '# Get all posts',
+    summary: 'Get all shared videos',
+    description: '# Get all shared videos',
   })
   @ApiQuery({
-    name: 'offset',
+    name: 'page',
     type: Number,
     examples: {
-      '0': {
-        value: 0,
-        description: 'Start from 0',
+      '1': {
+        value: 1,
+        description: 'page 1',
       },
-      '10': {
-        value: 10,
-        description: `Skip 10 collection`,
+      '2': {
+        value: 2,
+        description: `page 2`,
       },
     },
   })
   @ApiQuery({
-    name: 'limit',
+    name: 'perPage',
     type: Number,
     examples: {
       '10': {
         value: 10,
-        description: `Get 10 collection`,
+        description: `Get 10 posts`,
       },
       '50': {
         value: 50,
-        description: `Get 50 collection`,
+        description: `Get 50 posts`,
+      },
+    },
+  })
+  @ApiCreatedResponse({
+    description: 'Post list',
+    content: {
+      'application/json': {
+        examples: {
+          post_list: {
+            summary: 'shared post list',
+            value: postListResponseMock,
+          },
+        },
       },
     },
   })
   findAll(
-    @Query('offset', ParseIntPipe) offset: number,
-    @Query('limit', ParseIntPipe) limit: number,
+    @Query('page', ParseIntPipe) page: number,
+    @Query('perPage', ParseIntPipe) perPage: number,
   ) {
-    return this.postsService.findAll({ offset, limit });
+    return this.postsService.getAll(page, perPage);
   }
 }

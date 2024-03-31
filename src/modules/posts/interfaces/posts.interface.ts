@@ -13,3 +13,23 @@ export interface IPostShareYoutubeResponse {
   link: string;
   description: string;
 }
+
+export interface IPostUserItemResponse {
+  id: string;
+  fullName: string;
+}
+
+export interface IPostItemResponse {
+  id: string;
+  title: string;
+  link: string;
+  description?: string;
+  user: IPostUserItemResponse;
+  like?: string[];
+  unlike?: string[];
+}
+
+export interface IPostListResponse {
+  count: number;
+  items: IPostItemResponse[];
+}
