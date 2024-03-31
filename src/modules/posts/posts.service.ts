@@ -11,12 +11,15 @@ import { validateYouTubeUrl } from '@modules/shared/helpers';
 import * as ytdl from 'ytdl-core';
 import { CreatePostDto } from './dto/create-post.dto';
 import { User } from '@modules/users/entities/user.entity';
+import { PostsGateway } from './posts.gateway';
+import { NEW_SHARED_VIDEO } from './constants/post.constants';
 
 @Injectable()
 export class PostsService extends BaseServiceAbstract<Post> {
   constructor(
     @Inject('PostsRepositoryInterface')
     private readonly postsRepository: PostsRepositoryInterface,
+    private readonly postsGateway: PostsGateway,
   ) {
     super(postsRepository);
   }
@@ -45,6 +48,8 @@ export class PostsService extends BaseServiceAbstract<Post> {
         link: entity.link,
         description: entity.description,
       };
+
+      this.postsGateway.notify(NEW_SHARED_VIDEO, response);
 
       return response;
     } catch (error) {

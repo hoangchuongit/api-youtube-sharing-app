@@ -4,6 +4,7 @@ import { PostsController } from './posts.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Post, PostSchema } from './entities/post.entity';
 import { PostsRepository } from '@repositories/posts.repository';
+import { PostsGateway } from './posts.gateway';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { PostsRepository } from '@repositories/posts.repository';
   controllers: [PostsController],
   providers: [
     PostsService,
+    PostsGateway,
     {
       provide: 'PostsRepositoryInterface',
       useClass: PostsRepository,
