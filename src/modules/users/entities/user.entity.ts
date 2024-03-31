@@ -18,6 +18,27 @@ export type UserDocument = HydratedDocument<User>;
   },
 })
 export class User extends BaseEntity {
+  constructor({
+    firstName,
+    lastName,
+    email,
+    password,
+    currentRefreshToken,
+  }: {
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    password?: string;
+    currentRefreshToken?: string;
+  }) {
+    super();
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.email = email;
+    this.password = password;
+    this.currentRefreshToken = currentRefreshToken;
+  }
+
   @Prop({
     required: true,
     minlength: 2,

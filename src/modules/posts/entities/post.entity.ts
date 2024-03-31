@@ -17,6 +17,30 @@ export type PostDocument = mongoose.HydratedDocument<Post>;
   },
 })
 export class Post extends BaseEntity {
+  constructor({
+    title,
+    link,
+    description,
+    like,
+    unlike,
+    user,
+  }: {
+    title?: string;
+    link?: string;
+    description?: string;
+    like?: string[];
+    unlike?: string[];
+    user?: User;
+  }) {
+    super();
+    this.title = title;
+    this.link = link;
+    this.description = description;
+    this.like = like;
+    this.unlike = unlike;
+    this.user = user;
+  }
+
   @Prop({ required: true })
   title: string;
 

@@ -7,6 +7,7 @@ import {
   IPostUserItemResponse,
 } from '../interfaces/posts.interface';
 import { CreatePostDto } from '../dto/create-post.dto';
+import { Post } from '../entities/post.entity';
 
 export const postShareYoutubeInputMock: IPostShareYoutubeInput = {
   link: 'https://www.youtube.com/watch?v=Bn75IkUyhMo',
@@ -46,4 +47,21 @@ export const creatPostDtoMock: CreatePostDto = {
     ...userDetailMock,
     fullName: userDetailMock.fullName,
   },
+};
+
+export const createPostStub = (): Post => {
+  return {
+    _id: postShareYoutubeResponseMock.id,
+    id: postShareYoutubeResponseMock.id,
+    link: postShareYoutubeResponseMock.link,
+    title: postShareYoutubeResponseMock.title,
+    description: postShareYoutubeResponseMock.description,
+    like: [],
+    unlike: [],
+    user: {
+      ...userDetailMock,
+      _id: userDetailMock.id,
+      fullName: userDetailMock.fullName,
+    },
+  };
 };
