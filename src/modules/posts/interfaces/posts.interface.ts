@@ -32,4 +32,5 @@ export interface IPostItemResponse {
 export interface IPostListResponse {
   total: number;
   items: IPostItemResponse[];
+  hasMore: boolean;
 }

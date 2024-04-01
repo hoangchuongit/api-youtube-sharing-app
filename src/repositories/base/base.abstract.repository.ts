@@ -56,9 +56,12 @@ export abstract class BaseRepositoryAbstract<T extends BaseEntity>
         .sort({ createdAt: -1 });
     }
 
+    const hasMore = total - condition.skip * condition.limit > 0;
+
     return {
       total,
       items,
+      hasMore,
     };
   }
 

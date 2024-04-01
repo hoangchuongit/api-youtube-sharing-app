@@ -37,6 +37,7 @@ export const postItemResponseMock: IPostItemResponse = {
 export const postListResponseMock: IPostListResponse = {
   total: 1,
   items: [postItemResponseMock],
+  hasMore: false,
 };
 
 export const creatPostDtoMock: CreatePostDto = {

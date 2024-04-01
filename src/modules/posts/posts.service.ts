@@ -53,7 +53,17 @@ export class PostsService extends BaseServiceAbstract<Post> {
         description: entity.description,
       };
 
-      this.postsGateway.notify(NEW_SHARED_VIDEO, response);
+      const formatedItem: IPostItemResponse = {
+        ...response,
+        like: entity.like,
+        unlike: entity.unlike,
+        user: {
+          id: user.id,
+          fullName: `${user.firstName} ${user.lastName}`,
+        },
+      };
+
+      this.postsGateway.notify(NEW_SHARED_VIDEO, formatedItem);
 
       return response;
     } catch (error) {
@@ -65,7 +75,7 @@ export class PostsService extends BaseServiceAbstract<Post> {
     page: number = 1,
     perPage: number = 10,
   ): Promise<IPostListResponse> {
-    const { total, items } = await this.postsRepository.findAll(
+    const { total, items, hasMore } = await this.postsRepository.findAll(
       {
         skip: (page - 1) * perPage,
         limit: perPage,
@@ -91,6 +101,6 @@ export class PostsService extends BaseServiceAbstract<Post> {
       formatedItems.push(formatedItem);
     });
 
-    return { total, items: formatedItems };
+    return { total, items: formatedItems, hasMore };
   }
 }
