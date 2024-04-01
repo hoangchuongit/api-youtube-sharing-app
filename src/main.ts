@@ -18,6 +18,13 @@ async function bootstrap() {
       whitelist: true,
     }),
   );
+
+  app.enableCors({
+    allowedHeaders: '*',
+    origin: '*',
+    credentials: true,
+  });
+
   await app.listen(config_service.get('PORT'), () =>
     logger.log(`Application running on port ${config_service.get('PORT')}`),
   );
