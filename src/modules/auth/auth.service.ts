@@ -61,7 +61,7 @@ export class AuthService {
         refresh_token,
         user: {
           id: user.id,
-          fullName: user.fullName,
+          fullName: `${user.firstName} ${user.lastName}`,
           email: user.email,
         },
       };
@@ -91,7 +91,7 @@ export class AuthService {
         refresh_token,
         user: {
           id: user.id,
-          fullName: user.fullName,
+          fullName: `${user.firstName} ${user.lastName}`,
           email: user.email,
         },
       };
