@@ -2,6 +2,13 @@
 # API Youtube Sharing app
 API of youtube sharing app. Built from NestJS 10.
 
+Live mode: https://api-youtube-sharing-app-ca0fd87f9983.herokuapp.com/docs
+username: admin
+password: admin
+
+Client side live mode: https://dashboard.heroku.com/apps/web-youtube-sharing-app
+Client side github: https://github.com/hoangchuongit/web-youtube-sharing-app
+
 ## Features
 
 - User registration and login with JWT
@@ -9,10 +16,9 @@ API of youtube sharing app. Built from NestJS 10.
 - Real-time notifications for new video shares with Web socket
 
 ## Tech Feature
-- API docs using Swagger UI with URL http://localhost:3001/docs with a protected route:
-- Username: admin
-- Password: admin
+- API docs using Swagger UI with a protected route.
 - ![N|Solid](https://github.com/hoangchuongit/api-youtube-sharing-app/assets/24239781/0df4a9e8-c0e3-4494-804c-95da422569c1)
+- Using Docker setup to run on local
 
 - Also include testing modules for all: controllers, services, repositories, entities, etc... You can try with the command below after setting the environment for the application:
 
@@ -31,7 +37,6 @@ API Youtube Sharing app uses a number of open source projects to work properly:
 - [NestJS](https://nestjs.com/) - A progressive Node.js framework
 - [Node.js](https://nodejs.org/) - evented I/O for the backend
 - [Yarn](https://yarnpkg.com/) - package manager that doubles down as project manager
-- [Android Studio](https://developer.android.com/studio) - build .apk or .aab for Android devices
 - [Visual Studio Code](https://code.visualstudio.com/download) - Code editing.Redefined. Free. Built on open source. Runs everywhere.
 - [Docker](https://www.docker.com/) - Accelerated Container Application Development
 
