@@ -33,14 +33,14 @@ export class PostsService extends BaseServiceAbstract<Post> {
     }
 
     try {
-      const info = await ytdl.getInfo(link);
+      const info: any = await ytdl.getInfo(link);
       if (!info?.videoDetails) {
         throw new BadRequestException('This video is inactive or unlisted');
       }
 
       const dto: CreatePostDto = {
         title: info?.videoDetails?.title,
-        link,
+        link: info?.videoDetails?.video_url,
         description: info?.videoDetails?.description,
         user,
       };
