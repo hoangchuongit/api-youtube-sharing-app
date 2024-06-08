@@ -2,11 +2,11 @@
 # API Youtube Sharing app
 API of youtube sharing app. Built from NestJS 10.
 
-Live mode: https://api-youtube-sharing-app-ca0fd87f9983.herokuapp.com/docs
+Live mode: https://web-production-33daa.up.railway.app/docs
 username: admin
 password: admin
 
-Client side live mode: https://dashboard.heroku.com/apps/web-youtube-sharing-app
+Client side live mode: https://web-youtube-sharing-app-production.up.railway.app
 Client side github: https://github.com/hoangchuongit/web-youtube-sharing-app
 
 ## Features
